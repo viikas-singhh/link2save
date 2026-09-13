@@ -32,12 +32,19 @@ export default function DownloaderHero() {
     setStep("analyzing");
     setStatusMessage("Connecting to media service and analyzing URL...");
 
+    // Friendly notice for Render free tier spinning up
+    const coldStartTimer = setTimeout(() => {
+      setStatusMessage("Connecting to media engine (waking up server, may take ~30s on first load)...");
+    }, 3500);
+
     try {
       const data = await analyzeMedia(url);
+      clearTimeout(coldStartTimer);
       setMetadata(data);
       setStep("ready");
       setStatusMessage("Analysis complete. Select format and download.");
     } catch (err: unknown) {
+      clearTimeout(coldStartTimer);
       setStep("idle");
       const msg = err instanceof Error ? err.message : "Something went wrong while analyzing the media. Please try again.";
       setErrorMessage(msg);
@@ -54,7 +61,7 @@ export default function DownloaderHero() {
     const prepTimer = setTimeout(() => {
       setStep("processing");
       setStatusMessage("Extracting media streams and encoding with FFmpeg...");
-    }, 800);
+    }, 1000);
 
     try {
       await downloadMediaFile(url, format);
@@ -64,7 +71,7 @@ export default function DownloaderHero() {
       setIsCompleted(true);
     } catch (err: unknown) {
       clearTimeout(prepTimer);
-      setStep("idle");
+      setStep("ready");
       const msg = err instanceof Error ? err.message : "Something went wrong while processing the media. Please try again.";
       setErrorMessage(msg);
     }

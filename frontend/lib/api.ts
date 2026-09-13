@@ -14,11 +14,36 @@ export interface ApiError {
   message: string;
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const DEFAULT_PROD_API = "https://link2save-1.onrender.com";
+
+export function getApiBase(): string {
+  // 1. Explicitly configured NEXT_PUBLIC_API_URL
+  if (process.env.NEXT_PUBLIC_API_URL && process.env.NEXT_PUBLIC_API_URL.trim() !== "") {
+    return process.env.NEXT_PUBLIC_API_URL.trim().replace(/\/+$/, "");
+  }
+
+  // 2. Client-side browser check
+  if (typeof window !== "undefined") {
+    const hostname = window.location.hostname;
+    if (hostname === "localhost" || hostname === "127.0.0.1") {
+      return "http://localhost:8000";
+    }
+    // Any deployed public domain (Vercel, custom domain, etc.)
+    return DEFAULT_PROD_API;
+  }
+
+  // 3. Server-side check
+  if (process.env.NODE_ENV === "development") {
+    return "http://localhost:8000";
+  }
+
+  return DEFAULT_PROD_API;
+}
 
 export async function analyzeMedia(url: string): Promise<MediaMetadata> {
+  const apiBase = getApiBase();
   try {
-    const response = await fetch(`${API_BASE}/api/analyze`, {
+    const response = await fetch(`${apiBase}/api/analyze`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -49,6 +74,11 @@ export async function analyzeMedia(url: string): Promise<MediaMetadata> {
     return data;
   } catch (err: unknown) {
     if (err instanceof Error) {
+      if (err.message.includes("Failed to fetch") || err.name === "TypeError") {
+        throw new Error(
+          "Unable to reach the media server. If the server was sleeping (Render free tier), please wait 30 seconds and try again."
+        );
+      }
       throw err;
     }
     throw new Error("Unable to communicate with analysis server. Please verify your connection.");
@@ -59,8 +89,9 @@ export async function downloadMediaFile(
   url: string,
   format: "video" | "audio"
 ): Promise<{ filename: string }> {
+  const apiBase = getApiBase();
   try {
-    const response = await fetch(`${API_BASE}/api/download`, {
+    const response = await fetch(`${apiBase}/api/download`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -119,6 +150,11 @@ export async function downloadMediaFile(
     return { filename };
   } catch (err: unknown) {
     if (err instanceof Error) {
+      if (err.message.includes("Failed to fetch") || err.name === "TypeError") {
+        throw new Error(
+          "Download connection interrupted or server is waking up. Please retry."
+        );
+      }
       throw err;
     }
     throw new Error("Download failed. Please check network connection and try again.");
