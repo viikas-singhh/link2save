@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+@theme {
+  --color-navy-950: #030712;
+  --color-navy-900: #060B14;
+  --color-navy-850: #0A0F1D;
+  --color-navy-800: #0D1527;
+  --color-navy-700: #111C30;
+  --color-navy-600: #162032;
+  --color-navy-500: #1E293B;
+
+  --color-crimson-950: #450A0A;
+  --color-crimson-900: #7F1D1D;
+  --color-crimson-800: #991B1B;
+  --color-crimson-700: #B91C1C;
+  --color-crimson-600: #DC2626;
+  --color-crimson-500: #EF4444;
+  --color-crimson-400: #F87171;
+}
+
+:root {
+  --background: #060B14;
+  --foreground: #F8FAFC;
+}
+
+body {
+  background-color: #060B14;
+  color: #F8FAFC;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  overflow-x: hidden;
+}
+
+/* Cyber subtle grid background pattern */
+.cyber-grid {
+  background-image: linear-gradient(to right, rgba(30, 41, 59, 0.15) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(30, 41, 59, 0.15) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Subtle glowing pulse */
+@keyframes crimson-pulse {
+  0%, 100% {
+    box-shadow: 0 0 15px -3px rgba(220, 38, 38, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 25px 2px rgba(220, 38, 38, 0.45);
+  }
+}
+
+.glow-crimson {
+  animation: crimson-pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Custom scrollbar for cyber aesthetic */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #060B14;
+}
+::-webkit-scrollbar-thumb {
+  background: #1E293B;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #DC2626;
+}

@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: link2save-backend
+    runtime: docker
+    dockerfilePath: backend/Dockerfile
+    dockerContext: backend
+    plan: free
+    region: oregon
+    healthCheckPath: /health
+    envVars:
+      - key: DEBUG
+        value: "false"
+      - key: APP_ENV
+        value: "production"
+      - key: CLEANUP_INTERVAL_SECONDS
+        value: "300"
+      - key: FILE_EXPIRATION_SECONDS
+        value: "600"
+      - key: RATE_LIMIT_PER_MINUTE
+        value: "20"
+      - key: ALLOWED_ORIGINS
+        value: "https://*.vercel.app,*"

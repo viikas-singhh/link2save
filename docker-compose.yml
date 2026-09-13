@@ -1,0 +1,47 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: link2save-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8000
+      - DEBUG=false
+      - ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
+      - TEMP_DIR=/app/temp
+      - CLEANUP_INTERVAL_SECONDS=300
+      - FILE_EXPIRATION_SECONDS=600
+      - MAX_FILE_SIZE_BYTES=262144000
+      - DOWNLOAD_TIMEOUT_SECONDS=120
+      - RATE_LIMIT_PER_MINUTE=20
+    volumes:
+      - backend-temp:/app/temp
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: link2save-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+      - NEXT_PUBLIC_SITE_URL=http://localhost:3000
+      - NEXT_PUBLIC_ENABLE_ADS=false
+      - NEXT_PUBLIC_ADSENSE_CLIENT_ID=ca-pub-0000000000000000
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  backend-temp:
