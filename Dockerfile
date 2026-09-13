@@ -8,12 +8,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
-# Copy requirements and install (supports both root context and backend/ context)
-COPY backend/requirements.tx[t] requirements.tx[t] ./requirements.txt
+# Copy requirements and install
+COPY backend/requirements.txt ./requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy backend application source (supports both root context and backend/ context)
-COPY backend/ap[p] ap[p] ./app/
+# Copy backend application source
+COPY backend/app/ ./app/
 
 # Create ephemeral directory for media processing
 RUN mkdir -p /app/temp && chmod 777 /app/temp

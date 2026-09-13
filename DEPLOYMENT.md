@@ -48,8 +48,8 @@ git push -u origin main
    - **Name**: `link2save-backend`
    - **Region**: Choose the closest region to your audience (e.g., Oregon or Frankfurt).
    - **Language / Runtime**: Select **Docker**.
-   - **Dockerfile Path**: `backend/Dockerfile`
-   - **Docker Context Directory**: `backend`
+   - **Dockerfile Path**: `Dockerfile` (or leave default, Render auto-detects root `Dockerfile`)
+   - **Docker Context Directory**: `.` (or leave default)
    - **Instance Type**: `Free` (or `Starter`).
 5. Scroll to **Environment Variables** and add:
    | Key | Value | Notes |
