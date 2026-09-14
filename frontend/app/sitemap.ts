@@ -14,26 +14,44 @@ export default function sitemap(): MetadataRoute.Sitemap {
     {
       url: `${siteUrl}/youtube-video-downloader`,
       lastModified: now,
-      changeFrequency: "weekly" as const,
+      changeFrequency: "daily" as const,
       priority: 0.9,
     },
     {
       url: `${siteUrl}/youtube-to-mp3`,
       lastModified: now,
-      changeFrequency: "weekly" as const,
+      changeFrequency: "daily" as const,
+      priority: 0.9,
+    },
+    {
+      url: `${siteUrl}/instagram-reel-downloader`,
+      lastModified: now,
+      changeFrequency: "daily" as const,
+      priority: 0.9,
+    },
+    {
+      url: `${siteUrl}/instagram-dp-downloader`,
+      lastModified: now,
+      changeFrequency: "daily" as const,
+      priority: 0.9,
+    },
+    {
+      url: `${siteUrl}/instagram-post-downloader`,
+      lastModified: now,
+      changeFrequency: "daily" as const,
+      priority: 0.9,
+    },
+    {
+      url: `${siteUrl}/instagram-story-downloader`,
+      lastModified: now,
+      changeFrequency: "daily" as const,
       priority: 0.9,
     },
     {
       url: `${siteUrl}/instagram-video-downloader`,
       lastModified: now,
       changeFrequency: "weekly" as const,
-      priority: 0.9,
-    },
-    {
-      url: `${siteUrl}/instagram-reel-downloader`,
-      lastModified: now,
-      changeFrequency: "weekly" as const,
-      priority: 0.9,
+      priority: 0.8,
     },
     {
       url: `${siteUrl}/about`,

@@ -1,15 +1,21 @@
 import type { Metadata } from "next";
 import DownloaderHero from "@/components/DownloaderHero";
-import AdSlot from "@/components/AdSlot";
 import FaqAccordion from "@/components/FaqAccordion";
 import { FaqItem } from "@/lib/faqs";
 import { InstagramIcon } from "@/components/Icons";
-import { Smartphone, ShieldCheck, Lock } from "lucide-react";
+import { Smartphone, ShieldCheck, Lock, Film } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Instagram Video Downloader — Save Public Instagram Videos (MP4)",
+  title: "Instagram Video Downloader — Save Public IG Videos in Original MP4",
   description:
-    "Download public Instagram videos and feed posts in original MP4 quality. Fast, free, and mobile-friendly with no login or credentials needed.",
+    "Free Instagram Video Downloader. Download public Instagram videos and feed posts in original MP4 quality. Fast, 100% ad-free, and mobile-friendly with no login needed.",
+  keywords: [
+    "instagram video downloader",
+    "download instagram video mp4",
+    "save instagram feed video",
+    "instagram video download free",
+    "insta video saver no ads",
+  ],
   alternates: {
     canonical: "/instagram-video-downloader",
   },
@@ -19,7 +25,7 @@ const INSTAGRAM_VIDEO_FAQS: FaqItem[] = [
   {
     question: "Can I download videos from private Instagram accounts?",
     answer:
-      "No. link2save strictly respects user privacy and platform security. Content from private accounts or behind login checkpoints is never accessed or downloaded.",
+      "No. link2save strictly respects user privacy. Content from private accounts or behind login checkpoints is never accessed or downloaded.",
   },
   {
     question: "Do I need an Instagram account or login to use this tool?",
@@ -39,19 +45,66 @@ const INSTAGRAM_VIDEO_FAQS: FaqItem[] = [
 ];
 
 export default function InstagramVideoDownloaderPage() {
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: INSTAGRAM_VIDEO_FAQS.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer,
+      },
+    })),
+  };
+
+  const howToSchema = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: "How to Download Public Instagram Videos",
+    description: "Step-by-step instructions to save any public Instagram video to your smartphone or PC.",
+    step: [
+      {
+        "@type": "HowToStep",
+        name: "Copy Instagram Video Link",
+        text: "On Instagram, tap the three dots or Share icon on a public post and tap Copy Link.",
+        position: 1,
+      },
+      {
+        "@type": "HowToStep",
+        name: "Paste in link2save",
+        text: "Paste the URL into link2save's input box.",
+        position: 2,
+      },
+      {
+        "@type": "HowToStep",
+        name: "Save Original MP4",
+        text: "Hit Download to save the video file directly with no watermarks.",
+        position: 3,
+      },
+    ],
+  };
+
   return (
-    <div className="py-8">
+    <div className="py-6">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
+      />
+
       {/* Downloader Hero */}
       <DownloaderHero />
 
-      <AdSlot placement="hero-bottom" />
-
       {/* Guide Content */}
-      <section className="py-12 px-4 sm:px-6 max-w-4xl mx-auto space-y-12">
-        <div className="rounded-2xl border border-slate-800 bg-[#0D1527]/70 p-6 sm:p-8 space-y-6">
+      <section className="py-12 px-4 sm:px-6 max-w-4xl mx-auto space-y-10">
+        <div className="glass-panel rounded-2xl p-6 sm:p-8 space-y-6">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-xl bg-pink-950/60 border border-pink-500/30 text-pink-500">
-              <InstagramIcon className="h-6 w-6" />
+              <Film className="h-6 w-6" />
             </div>
             <div>
               <h2 className="text-xl sm:text-2xl font-bold text-white">
@@ -62,26 +115,26 @@ export default function InstagramVideoDownloaderPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
-            <div className="p-4 rounded-xl border border-slate-800/80 bg-slate-900/50 space-y-2">
-              <div className="text-pink-500 font-mono text-sm font-bold">01</div>
+            <div className="glass-card p-4 rounded-xl space-y-2">
+              <div className="text-pink-400 font-mono text-xs font-bold uppercase tracking-wider">STEP 1</div>
               <h3 className="text-sm font-semibold text-white">Copy Instagram Link</h3>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-300 leading-relaxed">
                 In the Instagram app or website, tap the three dots (&hellip;) or Share icon on a public post and select &ldquo;Copy Link&rdquo;.
               </p>
             </div>
 
-            <div className="p-4 rounded-xl border border-slate-800/80 bg-slate-900/50 space-y-2">
-              <div className="text-pink-500 font-mono text-sm font-bold">02</div>
+            <div className="glass-card p-4 rounded-xl space-y-2">
+              <div className="text-rose-400 font-mono text-xs font-bold uppercase tracking-wider">STEP 2</div>
               <h3 className="text-sm font-semibold text-white">Paste & Inspect</h3>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-300 leading-relaxed">
                 Paste the URL into link2save. Our backend verifies public availability and renders a preview of the post.
               </p>
             </div>
 
-            <div className="p-4 rounded-xl border border-slate-800/80 bg-slate-900/50 space-y-2">
-              <div className="text-pink-500 font-mono text-sm font-bold">03</div>
+            <div className="glass-card p-4 rounded-xl space-y-2">
+              <div className="text-emerald-400 font-mono text-xs font-bold uppercase tracking-wider">STEP 3</div>
               <h3 className="text-sm font-semibold text-white">Save Directly</h3>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-300 leading-relaxed">
                 Hit Download to retrieve the original high-resolution MP4 stream straight to your phone, tablet, or PC.
               </p>
             </div>
@@ -90,22 +143,22 @@ export default function InstagramVideoDownloaderPage() {
 
         {/* Informational features */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div className="rounded-2xl border border-slate-800 bg-[#0D1527]/50 p-6 space-y-3">
+          <div className="glass-card rounded-2xl p-6 space-y-3">
             <div className="flex items-center gap-2 text-pink-400">
               <Smartphone className="h-5 w-5" />
               <h3 className="font-bold text-sm uppercase font-mono">Mobile-First Convenience</h3>
             </div>
-            <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
-              Designed with touch-friendly controls and responsive layouts, link2save lets you paste and download Instagram media in one hand without clumsy popups or interstitial traps.
+            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+              Designed with touch-friendly controls and responsive layouts, link2save lets you paste and download Instagram media with ease without popups or ads.
             </p>
           </div>
 
-          <div className="rounded-2xl border border-slate-800 bg-[#0D1527]/50 p-6 space-y-3">
+          <div className="glass-card rounded-2xl p-6 space-y-3">
             <div className="flex items-center gap-2 text-emerald-400">
               <Lock className="h-5 w-5" />
-              <h3 className="font-bold text-sm uppercase font-mono">Zero Login Credential Risks</h3>
+              <h3 className="font-bold text-sm uppercase font-mono">Zero Credentials Needed</h3>
             </div>
-            <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
               Never enter your Instagram password or cookies on third-party sites. link2save only accesses public endpoints and never asks for your credentials.
             </p>
           </div>
@@ -114,14 +167,14 @@ export default function InstagramVideoDownloaderPage() {
         {/* Dedicated FAQs */}
         <div className="space-y-6">
           <div className="text-center">
-            <h2 className="text-lg font-bold text-white">Instagram Video FAQ</h2>
-            <p className="text-xs text-slate-400">Answers to common Instagram video download questions</p>
+            <h2 className="text-xl font-bold text-white">Instagram Video FAQ</h2>
+            <p className="text-xs text-slate-400 mt-1">Answers to common Instagram video download questions</p>
           </div>
-          <FaqAccordion items={INSTAGRAM_VIDEO_FAQS} />
+          <div className="glass-panel rounded-2xl p-6">
+            <FaqAccordion items={INSTAGRAM_VIDEO_FAQS} />
+          </div>
         </div>
       </section>
-
-      <AdSlot placement="footer" />
     </div>
   );
 }

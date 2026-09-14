@@ -6,7 +6,7 @@ export interface MediaMetadata {
   thumbnail?: string;
   duration?: number;
   author?: string;
-  formats: ("video" | "audio")[];
+  formats: ("video" | "audio" | "image")[];
 }
 
 export interface ApiError {
@@ -64,7 +64,7 @@ export async function analyzeMedia(url: string): Promise<MediaMetadata> {
         (response.status === 429
           ? "Too many requests. Please try again shortly."
           : response.status === 404
-          ? "We couldn't access this public media. It may be unavailable or unsupported."
+          ? "We couldn't access this public media. It may be unavailable, restricted, or unsupported."
           : "Something went wrong while analyzing the media. Please try again.");
 
       throw new Error(message);
@@ -87,7 +87,7 @@ export async function analyzeMedia(url: string): Promise<MediaMetadata> {
 
 export async function downloadMediaFile(
   url: string,
-  format: "video" | "audio"
+  format: "video" | "audio" | "image"
 ): Promise<{ filename: string }> {
   const apiBase = getApiBase();
   try {
@@ -117,7 +117,7 @@ export async function downloadMediaFile(
     }
 
     // Extract filename from Content-Disposition header
-    let filename = format === "audio" ? "audio_download.mp3" : "video_download.mp4";
+    let filename = format === "audio" ? "audio_download.mp3" : (format === "image" ? "image_download.jpg" : "video_download.mp4");
     const disposition = response.headers.get("content-disposition");
     if (disposition) {
       // 1. Check for filename*=utf-8''... (RFC 5987)

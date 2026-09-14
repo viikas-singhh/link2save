@@ -43,6 +43,11 @@ class Settings(BaseSettings):
     # FFmpeg executable path
     FFMPEG_PATH: str = ""
 
+    # Optional credentials / cookies for platform extraction
+    INSTAGRAM_SESSIONID: str = ""
+    INSTAGRAM_COOKIES_FILE: str = ""
+    YOUTUBE_COOKIES_FILE: str = ""
+
     def get_ffmpeg_binary(self) -> str:
         """Find the path to the ffmpeg executable."""
         if self.FFMPEG_PATH and os.path.exists(self.FFMPEG_PATH):

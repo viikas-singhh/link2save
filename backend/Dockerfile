@@ -1,9 +1,10 @@
 FROM python:3.12-slim
 
-# Install ffmpeg and system dependencies
+# Install ffmpeg, nodejs (JS runtime for yt-dlp YouTube challenges), and system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ffmpeg \
     curl \
+    nodejs \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app

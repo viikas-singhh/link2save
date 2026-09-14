@@ -1,8 +1,15 @@
 import React from "react";
-import { Layers } from "lucide-react";
+import { Sparkles, Film, Image as ImageIcon, UserCircle, History, Music } from "lucide-react";
 import { YoutubeIcon, InstagramIcon } from "@/components/Icons";
 
-export type PlatformFilter = "all" | "youtube" | "instagram";
+export type PlatformFilter =
+  | "all"
+  | "youtube"
+  | "instagram_reels"
+  | "instagram_posts"
+  | "instagram_dp"
+  | "instagram_stories"
+  | "youtube_mp3";
 
 interface PlatformSelectorProps {
   selected: PlatformFilter;
@@ -13,23 +20,43 @@ export default function PlatformSelector({ selected, onSelect }: PlatformSelecto
   const options: { id: PlatformFilter; label: string; icon: React.ReactNode }[] = [
     {
       id: "all",
-      label: "All Supported",
-      icon: <Layers className="h-4 w-4" />,
+      label: "All Media",
+      icon: <Sparkles className="h-3.5 w-3.5 text-amber-400" />,
     },
     {
       id: "youtube",
       label: "YouTube",
-      icon: <YoutubeIcon className="h-4 w-4 text-red-500" />,
+      icon: <YoutubeIcon className="h-3.5 w-3.5 text-red-500" />,
     },
     {
-      id: "instagram",
-      label: "Instagram",
-      icon: <InstagramIcon className="h-4 w-4 text-pink-500" />,
+      id: "instagram_reels",
+      label: "Reels",
+      icon: <Film className="h-3.5 w-3.5 text-pink-500" />,
+    },
+    {
+      id: "instagram_dp",
+      label: "Insta DP",
+      icon: <UserCircle className="h-3.5 w-3.5 text-purple-400" />,
+    },
+    {
+      id: "instagram_posts",
+      label: "Posts",
+      icon: <ImageIcon className="h-3.5 w-3.5 text-rose-400" />,
+    },
+    {
+      id: "instagram_stories",
+      label: "Stories",
+      icon: <History className="h-3.5 w-3.5 text-orange-400" />,
+    },
+    {
+      id: "youtube_mp3",
+      label: "Audio MP3",
+      icon: <Music className="h-3.5 w-3.5 text-emerald-400" />,
     },
   ];
 
   return (
-    <div className="flex items-center justify-center gap-2 pb-2">
+    <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 pb-1">
       {options.map((opt) => {
         const isActive = selected === opt.id;
         return (
@@ -37,10 +64,10 @@ export default function PlatformSelector({ selected, onSelect }: PlatformSelecto
             key={opt.id}
             type="button"
             onClick={() => onSelect(opt.id)}
-            className={`inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-medium transition-all ${
+            className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition-all duration-200 cursor-pointer ${
               isActive
-                ? "bg-slate-800 text-white shadow-sm ring-1 ring-slate-700"
-                : "bg-slate-900/60 text-slate-400 hover:bg-slate-800/60 hover:text-slate-300"
+                ? "bg-white/15 text-white shadow-lg shadow-black/40 ring-1 ring-white/30 backdrop-blur-md"
+                : "glass-pill text-slate-300 hover:text-white"
             }`}
           >
             {opt.icon}

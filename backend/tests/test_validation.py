@@ -42,6 +42,7 @@ def test_valid_youtube_urls():
         "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
         "https://youtu.be/dQw4w9WgXcQ",
         "https://m.youtube.com/watch?v=dQw4w9WgXcQ",
+        "https://www.youtube.com/shorts/dQw4w9WgXcQ",
     ]
     for url in urls:
         platform, clean = validate_and_identify_url(url)
@@ -53,6 +54,9 @@ def test_valid_instagram_urls():
     urls = [
         "https://www.instagram.com/reel/C3zY5z_L7oA/",
         "https://instagram.com/p/C3zY5z_L7oA",
+        "https://www.instagram.com/cristiano/",
+        "@cristiano",
+        "https://instagram.com/stories/cristiano/123456789/",
     ]
     for url in urls:
         platform, clean = validate_and_identify_url(url)

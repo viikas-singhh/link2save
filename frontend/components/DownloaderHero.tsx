@@ -7,7 +7,7 @@ import MediaPreview from "./MediaPreview";
 import ProgressState, { DownloadStep } from "./ProgressState";
 import { analyzeMedia, downloadMediaFile, MediaMetadata } from "@/lib/api";
 import { validateInputUrl } from "@/lib/validation";
-import { AlertCircle, RotateCcw, Shield } from "lucide-react";
+import { AlertCircle, RotateCcw, Shield, Sparkles } from "lucide-react";
 import { MediaFormat } from "./FormatSelector";
 
 export default function DownloaderHero() {
@@ -25,16 +25,16 @@ export default function DownloaderHero() {
 
     const validation = validateInputUrl(url);
     if (!validation.isValid) {
-      setErrorMessage(validation.errorMessage || "Please enter a valid YouTube or Instagram URL.");
+      setErrorMessage(validation.errorMessage || "Please enter a valid YouTube or Instagram URL or username.");
       return;
     }
 
     setStep("analyzing");
-    setStatusMessage("Connecting to media service and analyzing URL...");
+    setStatusMessage("Connecting to media engine and analyzing media...");
 
     // Friendly notice for Render free tier spinning up
     const coldStartTimer = setTimeout(() => {
-      setStatusMessage("Connecting to media engine (waking up server, may take ~30s on first load)...");
+      setStatusMessage("Waking up high-speed media engine (~20s on initial load)...");
     }, 3500);
 
     try {
@@ -55,12 +55,11 @@ export default function DownloaderHero() {
     if (!url) return;
     setErrorMessage(null);
     setStep("preparing");
-    setStatusMessage("Preparing isolated temporary environment...");
+    setStatusMessage(format === "image" ? "Fetching high-definition image..." : "Preparing isolated temporary sandbox...");
 
-    // Advance smoothly to processing
     const prepTimer = setTimeout(() => {
       setStep("processing");
-      setStatusMessage("Extracting media streams and encoding with FFmpeg...");
+      setStatusMessage(format === "image" ? "Optimizing image resolution..." : "Extracting media streams and encoding with FFmpeg...");
     }, 1000);
 
     try {
@@ -86,41 +85,48 @@ export default function DownloaderHero() {
   };
 
   return (
-    <section id="downloader" className="relative w-full pt-10 pb-16 px-4 sm:px-6">
-      <div className="mx-auto max-w-4xl text-center space-y-6">
+    <section id="downloader" className="relative w-full pt-8 pb-16 px-4 sm:px-6 overflow-hidden">
+      {/* Ambient background glow orbs for glassmorphic depth */}
+      <div className="ambient-glow-red -top-24 left-1/2 -translate-x-1/2 w-[550px] h-[350px] opacity-40" />
+      <div className="ambient-glow-pink top-32 -left-20 w-[400px] h-[400px] opacity-30" />
+      <div className="ambient-glow-cyan top-40 -right-20 w-[400px] h-[400px] opacity-25" />
+
+      <div className="relative mx-auto max-w-4xl text-center space-y-6">
         {/* Sub-badge */}
-        <div className="inline-flex items-center gap-2 rounded-full border border-red-500/20 bg-red-950/30 px-3.5 py-1 text-xs font-mono text-red-400">
-          <Shield className="h-3.5 w-3.5" />
-          <span>FAST &bull; SECURE &bull; NO LOGS</span>
+        <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md px-4 py-1.5 text-xs font-mono text-slate-300 shadow-lg">
+          <Shield className="h-3.5 w-3.5 text-red-400" />
+          <span>100% FREE &bull; NO ADS &bull; FULL HD &bull; ZERO LOGS</span>
         </div>
 
         {/* Hero Title */}
-        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white">
+        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight">
           Download Public Media <br />
-          <span className="bg-gradient-to-r from-red-500 via-red-400 to-rose-400 bg-clip-text text-transparent">
-            Without Limitations
+          <span className="bg-gradient-to-r from-red-500 via-rose-400 to-pink-400 bg-clip-text text-transparent">
+            Without Limits or Ads
           </span>
         </h1>
 
         {/* Short explanation */}
-        <p className="mx-auto max-w-2xl text-sm sm:text-base text-slate-400 leading-relaxed">
-          High-performance extractor for public YouTube videos and Instagram Reels.
-          Save high-definition MP4 videos or crystal-clear MP3 audio instantly.
+        <p className="mx-auto max-w-2xl text-sm sm:text-base text-slate-300/90 leading-relaxed font-normal">
+          High-performance downloader for public <strong className="text-white font-medium">YouTube Videos & Shorts</strong>,{" "}
+          <strong className="text-white font-medium">Instagram Reels</strong>,{" "}
+          <strong className="text-white font-medium">Full HD DP</strong>, and <strong className="text-white font-medium">Posts</strong>. Fast, free, and completely ad-free.
         </p>
 
-        {/* Platform quick toggle */}
+        {/* Platform quick toggle tabs */}
         <div className="pt-2">
           <PlatformSelector selected={filter} onSelect={setFilter} />
         </div>
 
         {/* Main Downloader Widget Container */}
-        <div className="relative mx-auto max-w-3xl mt-6 space-y-4">
+        <div className="relative mx-auto max-w-3xl mt-4 space-y-4">
           {!metadata ? (
             <UrlInput
               url={url}
               onChange={setUrl}
               onSubmit={handleAnalyze}
               isLoading={step === "analyzing"}
+              filterMode={filter}
             />
           ) : (
             <MediaPreview
@@ -134,12 +140,14 @@ export default function DownloaderHero() {
 
           {/* Stepped Progress Feedback */}
           {step !== "idle" && !isCompleted && (
-            <ProgressState currentStep={step} statusText={statusMessage} />
+            <div className="glass-card rounded-xl p-3">
+              <ProgressState currentStep={step} statusText={statusMessage} />
+            </div>
           )}
 
           {/* Error Message Box with Retry Action */}
           {errorMessage && (
-            <div className="rounded-xl border border-red-900/60 bg-red-950/40 p-4 text-left backdrop-blur-md animate-in fade-in duration-200">
+            <div className="glass-card rounded-xl border border-red-500/40 bg-red-950/40 p-4 text-left backdrop-blur-xl animate-in fade-in duration-200">
               <div className="flex items-start gap-3">
                 <AlertCircle className="h-5 w-5 text-red-400 shrink-0 mt-0.5" />
                 <div className="flex-1">
@@ -149,7 +157,7 @@ export default function DownloaderHero() {
                 <button
                   type="button"
                   onClick={metadata ? () => handleDownload("video") : handleAnalyze}
-                  className="inline-flex items-center gap-1 text-xs font-semibold text-red-300 hover:text-white bg-red-900/50 hover:bg-red-800/60 px-2.5 py-1 rounded-lg transition"
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-red-200 hover:text-white bg-red-900/60 hover:bg-red-800/80 px-3 py-1.5 rounded-lg transition cursor-pointer"
                 >
                   <RotateCcw className="h-3 w-3" />
                   <span>Retry</span>

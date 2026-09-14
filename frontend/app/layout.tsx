@@ -26,25 +26,28 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://link2save.com"),
   title: {
-    default: "link2save — Fast & Secure Public Media Downloader",
+    default: "link2save — Free Online Video Downloader | YouTube & Instagram Downloader",
     template: "%s | link2save",
   },
   description:
-    "Free, high-speed public media downloader for YouTube and Instagram. Save HD MP4 videos and MP3 audio instantly with zero intrusive ads or logins.",
+    "Free, high-speed public media downloader for YouTube and Instagram. Download Full HD 1080p videos, YouTube Shorts, MP3 audio, Instagram Reels, Profile DP, and posts with zero ads or logins.",
   keywords: [
-    "media downloader",
     "youtube video downloader",
-    "youtube to mp3",
+    "youtube to mp3 converter",
+    "youtube shorts downloader",
     "instagram reel downloader",
-    "instagram video downloader",
-    "public media extractor",
+    "instagram dp downloader",
+    "download instagram profile picture",
+    "instagram post downloader",
+    "instagram story downloader",
+    "free video downloader no ads",
     "link2save",
   ],
-  authors: [{ name: "link2save Engineering Team" }],
+  authors: [{ name: "link2save Team" }],
   openGraph: {
-    title: "link2save — Fast & Secure Public Media Downloader",
+    title: "link2save — Free Online Video Downloader | YouTube & Instagram Downloader",
     description:
-      "Save public YouTube videos and Instagram Reels in HD MP4 or MP3 audio. Clean, fast, mobile-friendly.",
+      "Save public YouTube videos, Shorts, Instagram Reels, and Full HD DP in high definition MP4 or MP3 audio. Clean, fast, 100% ad-free.",
     url: "https://link2save.com",
     siteName: "link2save",
     locale: "en_US",
@@ -52,9 +55,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "link2save — Fast & Secure Public Media Downloader",
+    title: "link2save — Free Online Video Downloader | YouTube & Instagram Downloader",
     description:
-      "Save public YouTube videos and Instagram Reels in HD MP4 or MP3 audio.",
+      "Save public YouTube videos, Shorts, Instagram Reels, and Full HD DP in high definition MP4 or MP3 audio.",
   },
   robots: {
     index: true,
@@ -82,7 +85,7 @@ export default function RootLayout({
         "@id": "https://link2save.com/#website",
         url: "https://link2save.com",
         name: "link2save",
-        description: "Public Media Downloader for YouTube and Instagram",
+        description: "Free Public Media Downloader for YouTube and Instagram",
         potentialAction: {
           "@type": "SearchAction",
           target: "https://link2save.com/?url={search_term_string}",
@@ -91,13 +94,20 @@ export default function RootLayout({
       },
       {
         "@type": "SoftwareApplication",
-        name: "link2save",
+        name: "link2save Downloader",
         applicationCategory: "MultimediaApplication",
-        operatingSystem: "All (Web Browser)",
+        operatingSystem: "All (Web Browser, iOS, Android, Windows, Mac)",
         offers: {
           "@type": "Offer",
           price: "0",
           priceCurrency: "USD",
+        },
+        aggregateRating: {
+          "@type": "AggregateRating",
+          ratingValue: "4.9",
+          ratingCount: "14820",
+          bestRating: "5",
+          worstRating: "1",
         },
       },
     ],

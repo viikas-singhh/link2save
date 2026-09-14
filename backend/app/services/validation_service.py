@@ -92,6 +92,18 @@ def validate_and_identify_url(raw_url: str) -> Tuple[Platform, str]:
     if len(url) > 2048:
         raise ValidationError("The provided URL exceeds the maximum allowed length.", code="URL_TOO_LONG")
 
+    # Convenience support for @username or bare handles for Instagram DP
+    if url.startswith("@"):
+        url = f"https://www.instagram.com/{url.lstrip('@').strip('/')}/"
+    elif not (url.startswith("http://") or url.startswith("https://")):
+        if any(d in url.lower() for d in ("youtube.com", "youtu.be", "instagram.com", "instagr.am")):
+            url = "https://" + url
+        elif "/" not in url and " " not in url and len(url) <= 35:
+            # Assume Instagram handle
+            url = f"https://www.instagram.com/{url}/"
+        else:
+            url = "https://" + url
+
     try:
         parsed = urlparse(url)
     except Exception:

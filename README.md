@@ -8,29 +8,30 @@ Built with a modern security-conscious architecture, it strictly processes autho
 
 ## Key Features
 
-- **YouTube Processing**:
-  - Automatically analyzes public YouTube URLs and extracts thumbnail, title, channel name, and duration.
-  - Generates full **MP4 (Video + Audio)** or **MP3 (Audio Only)** using `yt-dlp` and FFmpeg.
+- **YouTube Processing with `yt-dlp`**:
+  - Automatically analyzes public YouTube URLs and Shorts (`/shorts/` and standard URLs).
+  - Uses mobile player clients (`android`, `ios`, `mweb`) to bypass datacenter IP bot detection on cloud servers (Render/AWS).
+  - Generates Full HD **MP4 (1080p/720p Video + Audio)** or **MP3 (Audio Only 192 kbps)** with parallel FFmpeg remuxing.
 - **Instagram Processing**:
-  - Supports public Reels, videos, and post media.
-  - Strict privacy enforcement: Rejects private accounts and login walls.
+  - **Full HD DP (Profile Pictures)**: Download original high-resolution profile pictures by entering `@username` or profile URL.
+  - **Instagram Reels**: Save public vertical Reels with synchronized audio and zero watermarks.
+  - **Instagram Posts**: Download public feed photos, carousels, and videos in original quality.
+  - **Instagram Stories**: Download stories and highlights with session support.
 - **Security & Abuse Protection**:
   - **SSRF Prevention**: Strict hostname resolution and DNS validation blocking private/local subnets (RFC 1918, loopbacks, link-local).
   - **Protocol Filtering**: Only allows `http` and `https` schemes.
   - **Rate Limiting**: Sliding-window rate limiter preventing API abuse.
   - **Temporary File Isolation**: Media jobs execute in randomized UUID sandboxes (`temp/{job_id}/`).
   - **Zero Permanent Storage**: Media files are automatically cleaned up immediately following streaming via Starlette background tasks, complemented by an autonomous periodic background cleanup worker.
-  - **No Shell Injections**: Parameters are passed as safe argument arrays without shell interpolation.
-- **Design & UX**:
-  - Cyberpunk-inspired dark navy blue (`#060B14`, `#0A0F1D`) with deep red accents (`#DC2626`).
-  - Mobile-first responsive layouts across mobile (320px+), tablet, and desktop (1440px+).
-  - Four-stage progress feedback (`Analyzing` → `Preparing` → `Processing` → `Ready`).
-- **SEO & Google AdSense Ready**:
-  - Dynamic JSON-LD structured schemas (`WebSite`, `SoftwareApplication`, `FAQPage`).
-  - Dynamic `sitemap.ts` and `robots.ts`.
-  - Dedicated landing pages: `/youtube-video-downloader`, `/youtube-to-mp3`, `/instagram-video-downloader`, `/instagram-reel-downloader`.
-  - Complete AdSense compliance pages: `/about`, `/contact`, `/privacy`, `/terms`.
-  - Zero Cumulative Layout Shift (CLS) `<AdSlot />` wrappers with min-height reservations.
+- **Glassmorphism Design & UX**:
+  - State-of-the-art frosted glass aesthetic with `backdrop-filter: blur(24px) saturate(190%)` and subtle luminous ambient glow meshes.
+  - Convenient **1-Click Clipboard Paste** button.
+  - 7 quick media filter tabs for seamless navigation.
+  - 100% free with **zero advertisements, zero popups, and zero tracking**.
+- **SEO & Google Search Ranking**:
+  - Dynamic JSON-LD structured schemas (`WebSite`, `SoftwareApplication` with 4.9-star rating, `FAQPage`, and `HowTo`).
+  - Dynamic `sitemap.ts` and `robots.ts` covering all tools.
+  - Dedicated landing pages: `/youtube-video-downloader`, `/youtube-to-mp3`, `/instagram-reel-downloader`, `/instagram-dp-downloader`, `/instagram-post-downloader`, `/instagram-story-downloader`, `/instagram-video-downloader`.
 
 ---
 

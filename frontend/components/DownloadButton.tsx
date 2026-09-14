@@ -43,7 +43,7 @@ export default function DownloadButton({
         <>
           <Download className="h-5 w-5" />
           <span className="tracking-wide">
-            Download {format === "video" ? "MP4 Video" : "MP3 Audio"}
+            Download {format === "video" ? "MP4 Video" : format === "image" ? "HD Image (JPG)" : "MP3 Audio"}
           </span>
         </>
       )}

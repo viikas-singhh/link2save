@@ -27,13 +27,34 @@ class YouTubeExtractor(BaseMediaExtractor):
 
     def _get_base_ydl_opts(self) -> Dict[str, Any]:
         ffmpeg_bin = settings.get_ffmpeg_binary()
-        opts = {
+        opts: Dict[str, Any] = {
             "quiet": True,
             "no_warnings": True,
             "noplaylist": True,
             "no_color": True,
-            "socket_timeout": 15,
+            "socket_timeout": 20,
+            # Key fix for cloud hosts (Render/AWS): use Android & iOS API clients to bypass datacenter IP bot detection
+            "extractor_args": {
+                "youtube": {
+                    "player_client": ["android", "ios", "mweb", "web"],
+                    "player_skip": ["configs", "webpage"],
+                }
+            },
+            "http_headers": {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+                "Accept-Language": "en-US,en;q=0.9",
+            },
         }
+
+        # Check for optional cookies file
+        if settings.YOUTUBE_COOKIES_FILE and os.path.isfile(settings.YOUTUBE_COOKIES_FILE):
+            opts["cookiefile"] = settings.YOUTUBE_COOKIES_FILE
+        else:
+            # Fallback to cookies.txt in workspace or /app if present
+            default_cookie = Path(__file__).resolve().parent.parent.parent / "cookies.txt"
+            if default_cookie.is_file():
+                opts["cookiefile"] = str(default_cookie)
+
         if ffmpeg_bin:
             opts["ffmpeg_location"] = ffmpeg_bin
         return opts
@@ -112,6 +133,7 @@ class YouTubeExtractor(BaseMediaExtractor):
                 "bestvideo[height<=1080]+bestaudio/"
                 "best[height<=1080][ext=mp4]/"
                 "best[height<=1080]/"
+                "bestvideo+bestaudio/"
                 "best"
             )
             opts["merge_output_format"] = "mp4"
@@ -139,9 +161,10 @@ class YouTubeExtractor(BaseMediaExtractor):
             if not downloaded_files:
                 raise ExtractorError("Generated media file not found on disk.")
 
-            # Pick matching or largest file
+            # Pick largest file produced
             selected_file = max(downloaded_files, key=lambda f: f.stat().st_size)
-            final_disk_filename = f"{disk_title}.{expected_ext}"
+            actual_ext = selected_file.suffix.lstrip(".").lower() or expected_ext
+            final_disk_filename = f"{disk_title}.{actual_ext}"
             final_path = target_dir / final_disk_filename
 
             if selected_file != final_path:
@@ -150,7 +173,12 @@ class YouTubeExtractor(BaseMediaExtractor):
                 selected_file.rename(final_path)
 
             file_size = get_file_size(final_path)
-            display_filename = f"{display_title}.{expected_ext}"
+            display_filename = f"{display_title}.{actual_ext}"
+
+            if format_type == "audio":
+                content_type = "audio/mpeg" if actual_ext == "mp3" else f"audio/{actual_ext}"
+            else:
+                content_type = "video/mp4" if actual_ext == "mp4" else "application/octet-stream"
 
             return DownloadResult(
                 file_path=final_path,
