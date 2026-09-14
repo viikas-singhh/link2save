@@ -5,7 +5,7 @@ from fastapi.responses import FileResponse
 from starlette.background import BackgroundTask
 
 from app.api.dependencies import verify_rate_limit
-from app.extractors.base import UnavailableContentError, UnsupportedFormatError, ExtractorError
+from app.extractors.base import UnavailableContentError, UnsupportedFormatError, ExtractorError, BotProtectionError
 from app.schemas.download import DownloadRequest
 from app.schemas.common import ErrorResponse
 from app.services.download_service import download_service
@@ -81,6 +81,12 @@ async def download_media(payload: DownloadRequest):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail={"code": e.code, "message": e.message},
+        )
+    except BotProtectionError as e:
+        logger.warning(f"Download bot protection challenge: {e.message}", extra={"operation": "download", "error_code": e.code})
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail={"code": e.code, "message": e.user_message},
         )
     except UnavailableContentError as e:
         logger.info(f"Download content unavailable: {e.message}", extra={"operation": "download", "error_code": e.code})

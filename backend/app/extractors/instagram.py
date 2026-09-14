@@ -43,15 +43,12 @@ class InstagramExtractor(BaseMediaExtractor):
             },
         }
 
-        # Check for optional cookies file or session cookie
-        if settings.INSTAGRAM_COOKIES_FILE and os.path.isfile(settings.INSTAGRAM_COOKIES_FILE):
-            opts["cookiefile"] = settings.INSTAGRAM_COOKIES_FILE
+        # Check for resolved cookies file or session cookie
+        ig_cookie_path = settings.get_instagram_cookie_path()
+        if ig_cookie_path:
+            opts["cookiefile"] = str(ig_cookie_path)
         elif settings.INSTAGRAM_SESSIONID:
             opts["http_headers"]["Cookie"] = f"sessionid={settings.INSTAGRAM_SESSIONID.strip()};"
-        else:
-            default_cookie = Path(__file__).resolve().parent.parent.parent / "cookies.txt"
-            if default_cookie.is_file():
-                opts["cookiefile"] = str(default_cookie)
 
         if ffmpeg_bin:
             opts["ffmpeg_location"] = ffmpeg_bin
@@ -224,9 +221,11 @@ class InstagramExtractor(BaseMediaExtractor):
 
         # If everything failed, raise informative error
         err_msg = str(last_error).lower() if last_error else ""
-        if any(k in err_msg for k in ("login", "private", "checkpoint", "not found", "redirect", "restricted")):
-            raise UnavailableContentError("This Instagram content is private, restricted, or requires login.")
-        raise ExtractorError("Failed to extract public Instagram media. Please verify the URL is public.")
+        if any(k in err_msg for k in ("login", "private", "checkpoint", "not found", "redirect", "restricted", "empty media response")):
+            raise UnavailableContentError(
+                "This Instagram media requires a login session or is restricted. To enable full Instagram downloads, provide an INSTAGRAM_SESSIONID in server configuration."
+            )
+        raise ExtractorError("Failed to extract public Instagram media. Please verify the URL is public and accessible.")
 
     async def download(self, url: str, format_type: str, target_dir: Path) -> DownloadResult:
         """Download public Instagram media file (video MP4 or image JPG)."""

@@ -46,7 +46,68 @@ class Settings(BaseSettings):
     # Optional credentials / cookies for platform extraction
     INSTAGRAM_SESSIONID: str = ""
     INSTAGRAM_COOKIES_FILE: str = ""
+    INSTAGRAM_COOKIES_CONTENT: str = ""
+    INSTAGRAM_COOKIES_BASE64: str = ""
     YOUTUBE_COOKIES_FILE: str = ""
+    YOUTUBE_COOKIES_CONTENT: str = ""
+    YOUTUBE_COOKIES_BASE64: str = ""
+
+    def get_youtube_cookie_path(self) -> Optional[str]:
+        """Resolve YouTube cookies from file path, raw content, or base64 env vars."""
+        import base64
+        if self.YOUTUBE_COOKIES_FILE and os.path.isfile(self.YOUTUBE_COOKIES_FILE):
+            return self.YOUTUBE_COOKIES_FILE
+        
+        target_path = self.TEMP_DIR / "youtube_cookies.txt"
+        if self.YOUTUBE_COOKIES_CONTENT.strip():
+            target_path.write_text(self.YOUTUBE_COOKIES_CONTENT.strip(), encoding="utf-8")
+            return str(target_path)
+        
+        if self.YOUTUBE_COOKIES_BASE64.strip():
+            try:
+                decoded = base64.b64decode(self.YOUTUBE_COOKIES_BASE64.strip()).decode("utf-8")
+                target_path.write_text(decoded, encoding="utf-8")
+                return str(target_path)
+            except Exception:
+                pass
+        
+        # Check for cookies.txt in workspace root or backend root
+        for candidate in [
+            Path(__file__).resolve().parent.parent.parent / "cookies.txt",
+            Path(__file__).resolve().parent.parent / "cookies.txt",
+            Path("cookies.txt"),
+        ]:
+            if candidate.is_file():
+                return str(candidate)
+        return None
+
+    def get_instagram_cookie_path(self) -> Optional[str]:
+        """Resolve Instagram cookies from file path, raw content, or base64 env vars."""
+        import base64
+        if self.INSTAGRAM_COOKIES_FILE and os.path.isfile(self.INSTAGRAM_COOKIES_FILE):
+            return self.INSTAGRAM_COOKIES_FILE
+        
+        target_path = self.TEMP_DIR / "instagram_cookies.txt"
+        if self.INSTAGRAM_COOKIES_CONTENT.strip():
+            target_path.write_text(self.INSTAGRAM_COOKIES_CONTENT.strip(), encoding="utf-8")
+            return str(target_path)
+        
+        if self.INSTAGRAM_COOKIES_BASE64.strip():
+            try:
+                decoded = base64.b64decode(self.INSTAGRAM_COOKIES_BASE64.strip()).decode("utf-8")
+                target_path.write_text(decoded, encoding="utf-8")
+                return str(target_path)
+            except Exception:
+                pass
+        
+        for candidate in [
+            Path(__file__).resolve().parent.parent.parent / "cookies.txt",
+            Path(__file__).resolve().parent.parent / "cookies.txt",
+            Path("cookies.txt"),
+        ]:
+            if candidate.is_file():
+                return str(candidate)
+        return None
 
     def get_ffmpeg_binary(self) -> str:
         """Find the path to the ffmpeg executable."""

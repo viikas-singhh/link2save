@@ -47,6 +47,16 @@ class UnavailableContentError(ExtractorError):
         )
 
 
+class BotProtectionError(ExtractorError):
+    """Raised when platform bot detection (CAPTCHA, PO Token, or sign-in) blocks automated server extraction."""
+    def __init__(self, message: str = "Bot protection challenge triggered."):
+        super().__init__(
+            message=message,
+            code="BOT_PROTECTION_REQUIRED",
+            user_message="The platform requires bot verification or cookies for this media on the server. If this persists, configure server cookies or try another link.",
+        )
+
+
 class UnsupportedFormatError(ExtractorError):
     """Raised when the requested format cannot be served."""
     def __init__(self, message: str = "Requested format is unsupported."):

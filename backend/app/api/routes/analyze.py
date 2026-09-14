@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from app.api.dependencies import verify_rate_limit
-from app.extractors.base import UnavailableContentError, UnsupportedFormatError, ExtractorError
+from app.extractors.base import UnavailableContentError, UnsupportedFormatError, ExtractorError, BotProtectionError
 from app.schemas.analyze import AnalyzeRequest, AnalyzeResponse
 from app.schemas.common import ErrorResponse
 from app.services.media_service import media_service
@@ -16,8 +16,10 @@ router = APIRouter(prefix="/api", tags=["analyze"])
     responses={
         400: {"model": ErrorResponse},
         404: {"model": ErrorResponse},
+        422: {"model": ErrorResponse},
         429: {"model": ErrorResponse},
         500: {"model": ErrorResponse},
+        503: {"model": ErrorResponse},
     },
     dependencies=[Depends(verify_rate_limit)],
 )
@@ -40,6 +42,12 @@ async def analyze_url(payload: AnalyzeRequest):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail={"code": e.code, "message": e.message},
+        )
+    except BotProtectionError as e:
+        logger.warning(f"Bot protection challenge: {e.message}", extra={"operation": "analyze", "error_code": e.code})
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail={"code": e.code, "message": e.user_message},
         )
     except UnavailableContentError as e:
         logger.info(f"Content unavailable: {e.message}", extra={"operation": "analyze", "error_code": e.code})
